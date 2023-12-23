@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  api:
+    build:
+      ./api/
+    depends_on:
+      - postgresdb
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+
+  front:
+    build:
+      ./front/
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+
+  postgresdb:
+    image: postgres:13
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
